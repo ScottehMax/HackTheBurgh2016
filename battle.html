@@ -2,8 +2,77 @@
 <head>
   <title>PokeFinance</title>
 
+  <style type="text/css">
+
+  @font-face {
+    font-family: 'PokemonGB';
+    src: url('PokemonGB.eot?#iefix') format('embedded-opentype'),  url('PokemonGB.woff') format('woff'), url('PokemonGB.ttf')  format('truetype'), url('PokemonGB.svg#PokemonGB') format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+
+  .welcome_step1 {
+    font-family: 'PokemonGB' !important;
+    text-align: center;
+  }
+
+  #mainscreen {
+    font-family: 'PokemonGB' !important;
+    text-align: center;
+  }
+  </style>
+
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
   <script>
     URL = "ws://localhost:9001/";
+    var username;
+    var uuid;
+
+    // utility functions
+    function set_name(name) {
+      username = name;
+      socket.send(JSON.stringify({"uuid": uuid, "type": "set_name", "name": username}));
+    }
+
+    function show_main() {
+      $('#welcome_step1').fadeOut(300).delay(0.3).css('height', 0);
+      setTimeout(function(){
+        $('#mainscreen').css('top', 0).fadeIn(300).delay(0.3);
+        window.scrollTo(0, 1);
+      })
+    }
+
+    function show_battlelist() {
+      $('#welcome_step1').fadeOut(300).delay(0.3).css('height', 0);
+      $('#mainscreen').fadeOut(300).delay(0.3).css('height', 0);
+      setTimeout(function(){
+        $('#battlelist').css('top', 0).fadeIn(300).delay(0.3);
+        window.scrollTo(0, 1);
+      })
+    }
+
+    function show_battle() {
+      $('#mainscreen').fadeOut(300).delay(0.3).css('height', 0);
+      $('#battlelist').fadeOut(300).delay(0.3).css('height', 0);
+      setTimeout(function(){
+        $('#battlewindow').css('top', 0).fadeIn(300).delay(0.3);
+        window.scrollTo(0, 1);
+      })
+    }
+
+    function create_battle() {
+      socket.send(JSON.stringify({"uuid": uuid, "type": "create_battle"}));
+    }
+
+    function join_battle(battle_id) {
+      socket.send(JSON.stringify({"uuid": uuid, "type": "join_battle", "battle_id": battle_id}));
+      console.log(battle_id);
+    }
+
+    function get_battles() {
+      socket.send(JSON.stringify({"uuid": uuid, "type": "get_battles"}));
+    }
 
     window.onload = function() {
       socket = new WebSocket(URL, "echo-protocol");
@@ -15,10 +84,34 @@
       });
 
       socket.addEventListener("message", function(event) {
-        console.log(event.data);
         try {
           message = JSON.parse(event.data);
           console.log(message);
+          if (message.uuid) {
+            uuid = message.uuid;
+          }
+          if (message.info === 'battle_list') {
+            result_string = ''
+            for (var battle_id in message.battles) {
+              cur_battle = message.battles[battle_id];
+              result_string += '<button id=' + battle_id + ' onclick="join_battle(this.id)">' + cur_battle.p1 + '</button>'
+            }
+            if (message.battles.length < 1) {
+              result_string = 'There are no current battles. Feel like starting one?';
+            };
+
+            $('#battlelist').html(result_string);
+
+            show_battlelist();
+          }
+          if (message.info === 'battle_create_success') {
+            show_battle();
+            // do transition to battle
+          }
+          if (message.info === 'animation') {
+            // do animation shit
+          }
+
         } catch (e) {
           console.log('fucked it: ' + e.toString());
         }
@@ -27,11 +120,49 @@
       socket.addEventListener("close", function(event) {
         console.log("Disconnected!");
       });
-    }
 
+      $("#username_entry").keyup(function (e) {
+        if (e.keyCode == 13) {
+          res = $('#username_entry').val();
+          console.log(res);
+
+          if (res.length > 0) {
+            // send it!
+            set_name(res);
+            // transition away from username to main
+            show_main();
+
+          }
+        }
+      });
+    }
   </script>
 </head>
 
-<h1>Ayy lmao</h1>
+<div id="welcome_step1" class="welcome_step1">
+  <span style="display:block;padding:20px;">Enter your name:</span>
+  <div id="nameSelector">
+    <input class="welcome_step1" name="username" style="line-height:40px;font-size:25px;width:200px;text-align:center" class="name" type="text" maxlength=7 id="username_entry">
+  </div>
+</div>
+<div id="mainscreen" style="display: none">
+  This is the main screen!
+  <div id="buttons">
+  <button onClick="create_battle()">Create Battle</button>
+  <button onClick="get_battles()">Join Battle</button>
+  </div>
+</div>
+<div id="battlelist" style="display: none">
+  Battle list is here, lads.
+</div>
+<div id="battlewindow" style="display: none">
+  <div id="window" style="margin: 0 auto; display: block; width: 500px;">
+    <div id="you" style="">Bloomberg</div>
+    <div id="opponent" style="">BlackRock</div>
+
+    <br>
+    You're not in a battle, you silly goose! Dunno how you managed to get here...
+  </div>
+</div>
 
 </html>

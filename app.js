@@ -2,10 +2,27 @@ var Global = require('./global.js');
 console.log(Global);
 var user = require('./user.js');
 var utils = require('./utils.js');
+var battle = require('./battle.js');
 
 var PORT = 9001;
 var MAX_USERS = 20;
 
+/* Stuff */
+
+
+function current_battles() {
+  result = {info: 'battle_list', battles: {}};
+  for (var btl in Global.battles) {
+    batt = Global.battles[btl]
+    if (batt.open) {
+      result.battles[batt.id] = {p1: Global.users[batt.p1].name}
+    }
+  }
+  return result;
+};
+
+
+/* End Stuff */
 
 var WebSocketServer = require('websocket').server;
 var http = require('http');
@@ -36,5 +53,36 @@ wsServer.on('request', function (request) {
 
   connection.sendUTF(JSON.stringify({'info': 'name'}));
 
-  
+  connection.on('message', function (message) {
+    if (message.type === 'utf8') {
+      try {
+        cmd = JSON.parse(message.utf8Data);
+      } catch (e) {
+        connection.sendUTF("{'error': 'Invalid JSON'}");
+        cmd = {};
+      }
+
+      console.log(cmd);
+      switch(cmd.type) {
+      case 'set_name':
+        Global.users[cmd.uuid].set_name(cmd.name);
+        break;
+      case 'create_battle':
+        var new_battle = new battle.Battle(Global.users[cmd.uuid]);
+        console.log(Global.battles);
+        break;
+      case 'get_battles':
+        var battle_dict = current_battles();
+        if (battle_dict) {
+          connection.sendUTF(JSON.stringify(battle_dict));
+        }
+        break;
+      case 'join_battle':
+        Global.users[cmd.uuid].join(cmd.battle_id);
+        break;
+      }
+    }
+  });
+
+
 });
