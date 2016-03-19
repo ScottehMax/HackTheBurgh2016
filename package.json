@@ -1,0 +1,15 @@
+{
+  "name": "Stockemon",
+  "description": "wew lad",
+  "version": "0.0.1a",
+  "maintainers": [
+    {
+      "name": "Scott Maxwell",
+      "email": "scott@scotteh.me",
+      "web": "scotteh.me"
+    }
+  ],
+  "dependencies": {
+    "websocket": "^1.0.22"
+  }
+}
