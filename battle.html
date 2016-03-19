@@ -1,0 +1,37 @@
+<html>
+<head>
+  <title>PokeFinance</title>
+
+  <script>
+    URL = "ws://localhost:9001/";
+
+    window.onload = function() {
+      socket = new WebSocket(URL, "echo-protocol");
+
+      console.log("Socket created.");
+
+      socket.addEventListener("open", function(event) {
+        console.log("Connected!");
+      });
+
+      socket.addEventListener("message", function(event) {
+        console.log(event.data);
+        try {
+          message = JSON.parse(event.data);
+          console.log(message);
+        } catch (e) {
+          console.log('fucked it: ' + e.toString());
+        }
+      });
+
+      socket.addEventListener("close", function(event) {
+        console.log("Disconnected!");
+      });
+    }
+
+  </script>
+</head>
+
+<h1>Ayy lmao</h1>
+
+</html>
