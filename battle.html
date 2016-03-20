@@ -241,8 +241,10 @@
               $('button[name=move1]').text(Moves[message.result.moves[1]].name);
               $('button[name=move2]').text(Moves[message.result.moves[2]].name);
               $('button[name=move3]').text(Moves[message.result.moves[3]].name);
+              $('#you_hp_bar').html(message.result.hp + '/' + message.result.maxhp);
             } else {
               $('#opponent').text(message.result.name);
+              $('#opponent_hp_bar').html(message.result.hp + '/' + message.result.maxhp);
             }
           }
 
@@ -253,8 +255,10 @@
               $('button[name=move1]').text(Moves[message.result.moves[1]].name);
               $('button[name=move2]').text(Moves[message.result.moves[2]].name);
               $('button[name=move3]').text(Moves[message.result.moves[3]].name);
+              $('#you_hp_bar').html(message.result.hp + '/' + message.result.maxhp);
             } else {
               $('#opponent').text(message.result.name);
+              $('#opponent_hp_bar').html(message.result.hp + '/' + message.result.maxhp);
             }
           }
 
@@ -264,6 +268,13 @@
 
           if (message.info === 'battlemsg') {
             $('#battle_text').html(message.msg.replace('\n', '<br>'));
+            if (me == 'p1') {
+              $('#you_hp_bar').html(message.p1hp + '/' + message.p1maxhp);
+              $('#opponent_hp_bar').html(message.p2hp + '/' + message.p2maxhp);
+            } else {
+              $('#opponent_hp_bar').html(message.p1hp + '/' + message.p1maxhp);
+              $('#you_hp_bar').html(message.p2hp + '/' + message.p2maxhp);
+            }
           }
 
           if (message.info === 'forceswitch') {
@@ -429,7 +440,7 @@
     </div>
   </div>
   <div id="mainscreen" style="display: none">
-    This is the main screen!
+    Welcome to Stockemon!
     <div id="buttons">
       <button id="create_battle" onClick="create_battle()">Create Battle</button>
       <button id="join_battle" onClick="get_battles()">Join Battle</button>
@@ -458,7 +469,7 @@
 
         <div id="you_stats">
           <div id="you">Bloomberg</div>
-          <div id="you_level">Lv. 42</div>
+          <div id="you_level">Lv. 50</div>
           <div class="hp_bar_visual"><img src="images/hp_bar.png"></div>
           <div id="you_hp_bar">150/150</div>
         </div>
