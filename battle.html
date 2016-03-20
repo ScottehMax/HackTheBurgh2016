@@ -15,12 +15,45 @@
   .welcome_step1 {
     font-family: 'PokemonGB' !important;
     text-align: center;
+    border: 1px solid red;
+    margin-top: 5%;
+
   }
 
   #mainscreen {
     font-family: 'PokemonGB' !important;
     text-align: center;
+    border: 1px solid red;
+    margin-top: 5%;
+
   }
+  .bg_screen {
+    width:70%;
+    height:70%;
+    border: 1px solid black;
+    margin: 0 auto;
+    margin-top: 5%;
+    padding-top: 5%;
+  }
+
+  #create_battle {
+    font-family: 'PokemonGB' !important;
+    width: 20%;
+    height: 7%;
+    background-color: #eee;
+  }
+
+  #join_battle {
+    font-family: 'PokemonGB' !important;
+    width: 20%;
+    height: 7%;
+    background-color: #eee;
+  }
+  
+  #buttons{
+    margin-top: 5%;
+  }
+
   </style>
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -136,33 +169,37 @@
         }
       });
     }
+
+
+
   </script>
 </head>
+<div class="bg_screen">
+  <div id="welcome_step1" class="welcome_step1">
+    <span style="display:block;padding:20px;">Enter your name:</span>
+    <div id="nameSelector">
+      <input class="welcome_step1" name="username" style="line-height:40px;font-size:25px;width:200px;text-align:center" class="name" type="text" maxlength=7 id="username_entry">
+    </div>
+  </div>
+  <div id="mainscreen" style="display: none">
+    This is the main screen!
+    <div id="buttons">
+      <button id="create_battle" onClick="create_battle()">Create Battle</button>
+      <button id="join_battle" onClick="get_battles()">Join Battle</button>
+    </div>
+  </div>
+  <div id="battlelist" style="display: none">
+    Battle list is here, lads.
+  </div>
+  <div id="battlewindow" style="display: none">
+    <div id="window" style="margin: 0 auto; display: block; width: 500px;">
+      <div id="you" style="">Bloomberg</div>
+      <div id="opponent" style="">BlackRock</div>
 
-<div id="welcome_step1" class="welcome_step1">
-  <span style="display:block;padding:20px;">Enter your name:</span>
-  <div id="nameSelector">
-    <input class="welcome_step1" name="username" style="line-height:40px;font-size:25px;width:200px;text-align:center" class="name" type="text" maxlength=7 id="username_entry">
+      You're not in a battle, you silly goose! Dunno how you managed to get here...
+    </div>
   </div>
 </div>
-<div id="mainscreen" style="display: none">
-  This is the main screen!
-  <div id="buttons">
-  <button onClick="create_battle()">Create Battle</button>
-  <button onClick="get_battles()">Join Battle</button>
-  </div>
-</div>
-<div id="battlelist" style="display: none">
-  Battle list is here, lads.
-</div>
-<div id="battlewindow" style="display: none">
-  <div id="window" style="margin: 0 auto; display: block; width: 500px;">
-    <div id="you" style="">Bloomberg</div>
-    <div id="opponent" style="">BlackRock</div>
 
-    <br>
-    You're not in a battle, you silly goose! Dunno how you managed to get here...
-  </div>
-</div>
 
 </html>
