@@ -1,0 +1,144 @@
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript">
+
+	    //-----------------------------ANIMATIONS---------------------------------//
+
+	    function specialAttackA(){	
+	    	$("#ballA").hide().show();
+	    	$("#ballA").animate({
+	    		width: "+=2%",
+		    	height: "+=3.6%"
+	    	}, 200, function() {
+	    		$("#ballA").animate({
+		    		left: "+=20%",
+	    			top: "-=27%"
+		    	}, 200, function() {
+			        $( "#b" ).animate({
+				       left: "+=2%",
+				       top: "-=2%"
+					}, 200, function() {
+					    // Animation complete.
+					});
+				    $("#ballA").fadeOut();
+				    $( "#b" ).animate({
+				       left: "-=2%",
+				       top: "+=2%"
+					}, 200, function() {
+					    $("#ballA").animate({
+				    		left: "-=20%",
+			    			top: "+=27%"
+			    		}, 200, function(){
+			    			// Animation complete.
+			    		});
+			    		$("#ballA").animate({
+				    		width: "-=2%",
+		    				height: "-=3.6%"
+			    		}, 200, function(){
+			    			// Animation complete.
+			    		});
+				    });
+
+	      		});	
+	    	});
+	    }
+
+	    function specialAttackB(){
+	    	$("#ballB").hide().show();
+	    	$("#ballB").animate({
+	    		width: "+=2%",
+		    	height: "+=3.6%"
+	    	}, 200, function() {
+	    		$("#ballB").animate({
+		    		left: "-=20%",
+	    			top: "+=18%"
+		    	}, 200, function() {
+			        $( "#a" ).animate({
+				       left: "-=2%",
+				       top: "+=2%"
+					}, 200, function() {
+					    // Animation complete.
+					});
+				    $("#ballB").fadeOut();
+				    $( "#a" ).animate({
+				       left: "+=2%",
+				       top: "-=2%"
+					}, 200, function() {
+					    $("#ballB").animate({
+				    		left: "+=20%",
+			    			top: "-=18%"
+			    		}, 200, function(){
+			    			// Animation complete.
+			    		});
+			    		$("#ballB").animate({
+				    		width: "-=2%",
+		    				height: "-=3.6%"
+			    		}, 200, function(){
+			    			// Animation complete.
+			    		});
+				    });
+
+	      		});	
+	    	});
+	    }
+
+	    
+
+	    function attackMoveA(){
+	      console.log("In attackMove");
+		  $( "#a" ).animate({
+		    left: "+=20%",
+		    top: "-=27%"
+		  }, 200, function() {
+		    // Animation complete.
+	      });
+
+	      $( "#a" ).animate({
+		     left: "-=20%",
+		     top: "+=27%"
+		  }, 200, function() {
+		    // Animation complete.
+	      });
+		}
+
+		function attackMoveB(){
+	      console.log("In attackMove");
+	      $( "#b" ).animate({
+		     left: "-=20%",
+		     top: "+=27%"
+		  }, 200, function() {
+		    // Animation complete.
+	      });
+
+		  $( "#b" ).animate({
+		    left: "+=20%",
+		    top: "-=27%"
+		  }, 200, function() {
+		    // Animation complete.
+	      });
+
+	      
+		}
+		$(document).ready(function(){
+			//$("#ball").hide();
+
+		})
+
+
+	    //------------------------------------------------------------------------//
+
+	</script>
+</head>
+<body>
+	<div class="bg_screen">
+		<div id="a" onClick="attackMoveA()"></div>
+		<div id="b" onClick="attackMoveB()"></div>
+		<div id="ballA" hidden></div>
+		<div id="ballB" hidden></div>
+		<div id="clickA" onClick="specialAttackA()">A Special Attack</div>
+		<div id="clickB" onClick="specialAttackB()">B Special Attack</div>
+	</div>
+</body>
+</html>
