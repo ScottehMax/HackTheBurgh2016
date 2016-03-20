@@ -119,8 +119,26 @@
     font-family: 'PokemonGB' !important;
   }
 
-  .hp_bar_visual{
-    padding:10px 0;
+  #hp_bar_visual1{
+    position: absolute;
+    margin: 5px 0;
+    background-color: green;
+    height: 10px;
+    margin-left: 69px;
+    width: 230px;
+    z-index: -1;
+
+  }
+
+  #hp_bar_visual2{
+    position: absolute;
+    margin: 5px 0;
+    background-color: green;
+    height: 10px;
+    margin-left: 69px;
+    width: 230px;
+    z-index: -1;
+
   }
 
   .battle_search_buttons{
@@ -129,6 +147,13 @@
 
     height:7%;
     min-height: 50px;
+
+  }
+
+  #hp_bar_this_crap1{
+  }
+
+  #hp_bar_this_crap2{
 
   }
 
@@ -509,7 +534,7 @@
         <div id="opponent_stats">
           <div id="opponent">BlackRock</div>
           <div id="opponent_level">Lv. 50</div>
-          <div class="hp_bar_visual"><img src="images/hp_bar.png"></div>
+          <div><div id="hp_bar_visual1"></div><img id="hp_bar_this_crap1" src="images/hp_bar.png"></div>
           <div id="opponent_hp_bar">150/150</div>
         </div>
 
@@ -519,7 +544,7 @@
         <div id="you_stats">
           <div id="you">Bloomberg</div>
           <div id="you_level">Lv. 50</div>
-          <div class="hp_bar_visual"><img src="images/hp_bar.png"></div>
+          <div><div id="hp_bar_visual2"></div><img id="hp_bar_this_crap2" src="images/hp_bar.png"></div>
           <div id="you_hp_bar">150/150</div>
         </div>
       </div>
