@@ -121,22 +121,22 @@
 
   #hp_bar_visual1{
     position: absolute;
-    margin: 5px 0;
+    margin: 1px 0;
     background-color: green;
     height: 10px;
     margin-left: 69px;
-    width: 230px;
+    width: 227px;
     z-index: -1;
 
   }
 
   #hp_bar_visual2{
     position: absolute;
-    margin: 5px 0;
+    margin: 1px 0;
     background-color: green;
     height: 10px;
     margin-left: 69px;
-    width: 230px;
+    width: 227px;
     z-index: -1;
 
   }
@@ -150,11 +150,12 @@
 
   }
 
-  #hp_bar_this_crap1{
+  #you_hp_bar{
+    margin-top:5px;
   }
 
-  #hp_bar_this_crap2{
-
+  #opponent_hp_bar{
+    margin-top:5px;
   }
 
 
@@ -511,7 +512,9 @@
         left: "+=20%",
         top: "-=27%"
       }, 200, function() {
-        // Animation complete.
+        $("#hp_bar_visual1").animate({
+          left:"="+(double($("#opponent_hp_bar").substring(0,3))/double($("#opponent_hp_bar").substring(3)))+"%"
+        }, 200, function(){});
       });
     }
 
