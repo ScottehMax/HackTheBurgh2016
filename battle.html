@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>PokeFinance</title>
+  <title>Stockemon</title>
 
   <style type="text/css">
 
@@ -25,10 +25,10 @@
   }
   .bg_screen {
     width:70%;
-    height:70%;
+    height:75%;
     border: 1px solid black;
     margin: 0 auto;
-    margin-top: 5%;
+    margin-top: 3%;
     padding-top: 5%;
   }
 
@@ -121,6 +121,15 @@
 
   .hp_bar_visual{
     padding:10px 0;
+  }
+
+  .battle_search_buttons{
+    font-family: 'PokemonGB' !important;
+    width:24%;
+
+    height:7%;
+    min-height: 50px;
+
   }
 
 
@@ -224,7 +233,7 @@
             result_string = ''
             for (var battle_id in message.battles) {
               cur_battle = message.battles[battle_id];
-              result_string += '<button id=' + battle_id + ' onclick="join_battle(this.id)">' + cur_battle.p1 + '</button>'
+              result_string += '<button class="battle_search_buttons" id=' + battle_id + ' onclick="join_battle(this.id)">' + cur_battle.p1 + '</button>'
             }
             if (message.battles.length < 1) {
               result_string = 'There are no current battles. Feel like starting one?';
@@ -359,8 +368,8 @@
     height: "+=3.6%"
       }, 200, function() {
         $("#you_ball").animate({
-            left: "+=20%",
-          top: "-=27%"
+            left: "+=23%",
+          top: "-=30%"
           }, 200, function() {
           $( "#opponent_sprite" ).animate({
             left: "+=2%",
@@ -374,8 +383,8 @@
             top: "+=2%"
             }, 200, function() {
               $("#you_ball").animate({
-                left: "-=20%",
-                top: "+=27%"
+                left: "-=23%",
+                top: "+=30%"
               }, 200, function(){
                 // Animation complete.
               });
@@ -397,8 +406,8 @@
       height: "+=3.6%"
       }, 200, function() {
         $("#opponent_ball").animate({
-          left: "-=20%",
-          top: "+=18%"
+          left: "-=23%",
+          top: "+=21%"
           }, 200, function() {
           $( "#you_sprite" ).animate({
             left: "-=2%",
@@ -412,8 +421,8 @@
             top: "-=2%"
             }, 200, function() {
               $("#opponent_ball").animate({
-              left: "+=20%",
-              top: "-=18%"
+              left: "+=23%",
+              top: "-=21%"
               }, 200, function(){
                 // Animation complete.
               });
