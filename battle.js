@@ -87,6 +87,8 @@ Battle.prototype.switch = function (idn) {
         var winner = 'p2';
         Global.users[this.p1].socket.sendUTF(JSON.stringify({info: 'gameover',
                                                              winner: winner}));
+        Global.users[this.p2].socket.sendUTF(JSON.stringify({info: 'gameover',
+                                                             winner: winner}));
       }
       break;
     case 'p2':
@@ -98,6 +100,8 @@ Battle.prototype.switch = function (idn) {
         this.gameover = true;
         var winner = 'p1';
         Global.users[this.p1].socket.sendUTF(JSON.stringify({info: 'gameover',
+                                                             winner: winner}));
+        Global.users[this.p2].socket.sendUTF(JSON.stringify({info: 'gameover',
                                                              winner: winner}));
       }
       break;

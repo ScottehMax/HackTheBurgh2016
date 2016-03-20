@@ -1,101 +1,99 @@
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="style.css">
-	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-	<script type="text/javascript">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script type="text/javascript">
 
 	    //-----------------------------ANIMATIONS---------------------------------//
 
-	    function specialAttackA(){	
-	    	$("#ballA").hide().show();
-	    	$("#ballA").animate({
-	    		width: "+=2%",
-		    	height: "+=3.6%"
-	    	}, 200, function() {
-	    		$("#ballA").animate({
-		    		left: "+=20%",
-	    			top: "-=27%"
-		    	}, 200, function() {
-			        $( "#b" ).animate({
-				       left: "+=2%",
-				       top: "-=2%"
-					}, 200, function() {
-					    // Animation complete.
-					});
-				    $("#ballA").fadeOut();
-				    $( "#b" ).animate({
-				       left: "-=2%",
-				       top: "+=2%"
-					}, 200, function() {
-					    $("#ballA").animate({
-				    		left: "-=20%",
-			    			top: "+=27%"
-			    		}, 200, function(){
-			    			// Animation complete.
-			    		});
-			    		$("#ballA").animate({
-				    		width: "-=2%",
-		    				height: "-=3.6%"
-			    		}, 200, function(){
-			    			// Animation complete.
-			    		});
-				    });
+	function special_attack_you(){
+	  $("#you_ball").hide().show();
+	  $("#you_ball").animate({
+	    width: "+=2%",
+		height: "+=3.6%"
+	    }, 200, function() {
+	      $("#you_ball").animate({
+            left: "+=20%",
+	        top: "-=27%"
+	        }, 200, function() {
+	        $( "#opponent_sprite" ).animate({
+	          left: "+=2%",
+	          top: "-=2%"
+	          }, 200, function() {
+	  	       // Animation complete.
+	          });
+	        $("#you_ball").fadeOut();
+            $( "#opponent_sprite" ).animate({
+	          left: "-=2%",
+	          top: "+=2%"
+	          }, 200, function() {
+	            $("#you_ball").animate({
+	              left: "-=20%",
+	              top: "+=27%"
+	            }, 200, function(){
+	              // Animation complete.
+	            });
+	            $("#you_ball").animate({
+		          width: "-=2%",
+		          height: "-=3.6%"
+		        }, 200, function(){
+		          // Animation complete.
+	            });
+	          });
+	        });	
+	      });
+	}
 
+	function special_attack_opponent(){
+      $("#opponent_ball").hide().show();
+	  $("#opponent_ball").animate({
+	    width: "+=2%",
+		height: "+=3.6%"
+	    }, 200, function() {
+	      $("#opponent_ball").animate({
+		    left: "-=20%",
+	        top: "+=18%"
+		    }, 200, function() {
+		      $( "#you_sprite" ).animate({
+		        left: "-=2%",
+				top: "+=2%"
+				}, 200, function() {
+				  // Animation complete.
+				});
+			  $("#opponent_ball").fadeOut();
+			  $( "#you_sprite" ).animate({
+			    left: "+=2%",
+			    top: "-=2%"
+		    	  }, 200, function() {
+				  $("#opponent_ball").animate({
+				    left: "+=20%",
+			    	top: "-=18%"
+			    	}, 200, function(){
+			         	// Animation complete.
+			      	});
+			      $("#opponent_ball").animate({
+				    width: "-=2%",
+		    	    height: "-=3.6%"
+			    	}, 200, function(){
+			    	    // Animation complete.
+			    	});
+				  });
 	      		});	
-	    	});
-	    }
-
-	    function specialAttackB(){
-	    	$("#ballB").hide().show();
-	    	$("#ballB").animate({
-	    		width: "+=2%",
-		    	height: "+=3.6%"
-	    	}, 200, function() {
-	    		$("#ballB").animate({
-		    		left: "-=20%",
-	    			top: "+=18%"
-		    	}, 200, function() {
-			        $( "#a" ).animate({
-				       left: "-=2%",
-				       top: "+=2%"
-					}, 200, function() {
-					    // Animation complete.
-					});
-				    $("#ballB").fadeOut();
-				    $( "#a" ).animate({
-				       left: "+=2%",
-				       top: "-=2%"
-					}, 200, function() {
-					    $("#ballB").animate({
-				    		left: "+=20%",
-			    			top: "-=18%"
-			    		}, 200, function(){
-			    			// Animation complete.
-			    		});
-			    		$("#ballB").animate({
-				    		width: "-=2%",
-		    				height: "-=3.6%"
-			    		}, 200, function(){
-			    			// Animation complete.
-			    		});
-				    });
-
-	      		});	
-	    	});
+	    	  });
 	    }
 
 	    
 
-	    function attackMoveA(){
-	      console.log("In attackMove");
-		  $( "#a" ).animate({
+	    function attack_move_you(){
+	      //console.log("In attack_move");
+		  $( "#you_sprite" ).animate({
 		    left: "+=20%",
 		    top: "-=27%"
 		  }, 200, function() {
 		    // Animation complete.
 	      });
 
-	      $( "#a" ).animate({
+	      $( "#you_sprite" ).animate({
 		     left: "-=20%",
 		     top: "+=27%"
 		  }, 200, function() {
@@ -103,16 +101,16 @@
 	      });
 		}
 
-		function attackMoveB(){
-	      console.log("In attackMove");
-	      $( "#b" ).animate({
+		function attack_move_opponent(){
+	      //console.log("In attack_move");
+	      $( "#opponent_sprite" ).animate({
 		     left: "-=20%",
 		     top: "+=27%"
 		  }, 200, function() {
 		    // Animation complete.
 	      });
 
-		  $( "#b" ).animate({
+		  $( "#opponent_sprite" ).animate({
 		    left: "+=20%",
 		    top: "-=27%"
 		  }, 200, function() {
@@ -129,16 +127,32 @@
 
 	    //------------------------------------------------------------------------//
 
-	</script>
+  </script>
 </head>
 <body>
-	<div class="bg_screen">
-		<div id="a" onClick="attackMoveA()"></div>
-		<div id="b" onClick="attackMoveB()"></div>
-		<div id="ballA" hidden></div>
-		<div id="ballB" hidden></div>
-		<div id="clickA" onClick="specialAttackA()">A Special Attack</div>
-		<div id="clickB" onClick="specialAttackB()">B Special Attack</div>
+  <div class="bg_screen">
+
+    <div id="opponent_sprite" onClick="attack_move_opponent()"></div>
+    <div id="opponent_ball" hidden></div>
+
+	<div id="opponent_stats">
+	  <div id="opponent_name"></div>
+	  <div id="opponent_level"></div>
+	  <div id="opponent_hp_bar"></div>
 	</div>
+
+	<div id="you_sprite" onClick="attack_move_you()"></div>
+	<div id="you_ball" hidden></div>
+	
+	<div id="you_stats">
+	  <div id="you_name"></div>
+	  <div id="you_level"></div>
+	  <div id="you_hp_bar"></div>
+	</div>
+		
+	<!--<div id="click_a" onClick="special_attack_you()">You Special Attack</div>
+	<div id="click_b" onClick="special_attack_opponent()">Opponent Special Attack</div>-->
+  </div>
+  
 </body>
 </html>

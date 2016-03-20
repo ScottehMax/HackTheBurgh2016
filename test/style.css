@@ -7,9 +7,7 @@
     padding-top: 5%;
 }
 
-
-#a {
-
+#you_sprite {
   background:#0F0;
   width:10%;
   height:17%;
@@ -19,8 +17,7 @@
 
 } 
 
-#b {
-
+#opponent_sprite {
   background:#F00;
   width:10%;
   height:17%;
@@ -30,7 +27,7 @@
 
 } 
 
-#ballA{
+#you_ball{
   background:#00F;
   width:2.3%;
   height:4%;
@@ -40,7 +37,7 @@
   border-radius: 50px;
 }
 
-#ballB{
+#opponent_ball{
   background:#0AA;
   width:2.3%;
   height:4%;
@@ -50,13 +47,13 @@
   border-radius: 50px;
 }
 
-#clickA{
+#click_a{
 	height:5%;
 	width:12%;
 	background-color: #AFA;
 }
 
-#clickB{
+#click_b{
 	height:5%;
 	width:12%;
 	background-color: #FAA;
