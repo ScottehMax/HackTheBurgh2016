@@ -207,6 +207,12 @@
     }
 
     function show_battle() {
+      background = new Audio('pokesong.mp3'); 
+      background.addEventListener('ended', function() {
+          this.currentTime = 0;
+          this.play();
+      }, false);
+      background.play();
       $('#mainscreen').fadeOut(300).delay(0.3).css('height', 0);
       $('#battlelist').fadeOut(300).delay(0.3).css('height', 0);
       $('#prebattlewindow').fadeOut(300).delay(0.3).css('height', 0);
@@ -558,7 +564,6 @@
 
       });
     }
-
 
       //------------------------------------------------------------------//
 
