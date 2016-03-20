@@ -95,6 +95,10 @@
       })
     }
 
+    function send_move(moveid) {
+      socket.send(JSON.stringify({"uuid": uuid, "type": "pick_move", 'id': moveid}));
+    }
+
     function create_battle() {
       socket.send(JSON.stringify({"uuid": uuid, "type": "create_battle"}));
     }
@@ -216,8 +220,16 @@
   <div id="battlewindow" style="display: none">
     <div id="window" style="margin: 0 auto; display: block; width: 500px;">
       <div id="opponent" style="">BlackRock</div>
+      <div id="opponent_sprite" style="">Test</div>
       <div id="you" style="">Bloomberg</div>
-
+      <div id="you_sprite" style="">Test</div>
+      <div id="battle_text"> Bloomberg used Take Down! </div>
+      <div id="battle_buttons">
+        <button id=0 onclick="send_move(this.id)">first move</button>
+        <button id=1 onclick="send_move(this.id)">second move</button>
+        <button id=2 onclick="send_move(this.id)">third move</button>
+        <button id=3 onclick="send_move(this.id)">fourth move</button>
+      </div>
       You're not in a battle, you silly goose! Dunno how you managed to get here...
     </div>
   </div>

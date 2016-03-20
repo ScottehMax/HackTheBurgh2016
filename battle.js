@@ -8,8 +8,10 @@ function Battle(p1) {
 
   this.teams = {p1: [], p2: []};
   this.active = {p1: null, p2: null};
+  this.buffered_moves = {p1: null, p2: null};
 
   this.open = true;
+  this.fainted = null;
 
   this.id = Global.largestbattleid;
   Global.battles[this.id] = this;
@@ -100,33 +102,80 @@ Battle.prototype.switch = function (idn) {
   }
 }
 
-Battle.prototype.move = function (p1moveid, p2moveid) {
-  p1move = this.active.p1.moves.p1moveid;
-  p2move = this.active.p2.moves.p2moveid;
+Battle.prototype.get_move = function(playerid, moveid) {
+  this.buffered_moves[playerid] = moveid;
+  if (this.buffered_moves['p1'] !== null && this.buffered_moves['p2'] !== null) {
+    console.log("Both players have chosen! Moving..");
+    this.move(this.buffered_moves['p1'], this.buffered_moves['p2']);
+    this.buffered_moves = {p1: null, p2: null};
+  }
+}
 
+Battle.prototype.move = function (p1moveid, p2moveid) {
+  p1move = this.active.p1.moves[p1moveid];
+  p2move = this.active.p2.moves[p2moveid];
+
+  this.fainted = '';
+
+  var message = '';
   if (this.active.p1.spe >= this.active.p2.spe) {
-    this.active.p2.hp -= pokemon.moves(p1move).damage * (this.active.p1.atk / this.active.p2.def)
+    var dealt_damage = pokemon.Moves[p1move].damage * (this.active.p1.atk / this.active.p2.def);
+    console.log('p2');
+    console.log(this.active.p2.hp);
+    console.log(this.active.p2.maxhp);
+    console.log(dealt_damage);
+    message += this.active.p1.name + ' has dealt ' + (dealt_damage*100/this.active.p2.maxhp).toString() + '% damage to ' + this.active.p2.name + '!\n';
+    this.active.p2.hp -= dealt_damage;
     if (this.active.p2.hp <= 0) {
-      this.switch('p2');
-      return;
+      message += this.active.p2.name + ' fainted!\n';
+      this.fainted = 'p2'
+      //this.switch('p2');
+      //return;
     }
-    this.active.p1.hp -= pokemon.moves(p2move).damage * (this.active.p2.atk / this.active.p1.def)
+    var dealt_damage = pokemon.Moves[p2move].damage * (this.active.p2.atk / this.active.p1.def);
+    // faint check
+    if (this.active.p2.hp > 0) {
+      message += this.active.p2.name + ' has dealt ' + (dealt_damage*100/this.active.p1.maxhp).toString() + '% damage to ' + this.active.p1.name + '!\n';
+      this.active.p1.hp -= dealt_damage;
+    }
+
     if (this.active.p1.hp <= 0) {
-      this.switch('p1');
-      return;
+      message += this.active.p1.name + ' fainted!\n';
+      this.fainted = 'p1'
+      //this.switch('p1');
+      //return;
     }
   } else {
-    this.active.p1.hp -= pokemon.moves(p2move).damage * (this.active.p2.atk / this.active.p1.def)
+    var dealt_damage = pokemon.Moves[p2move].damage * (this.active.p2.atk / this.active.p1.def);
+    message += this.active.p2.name + ' has dealt ' + (dealt_damage*100/this.active.p1.maxhp).toString() + '% damage to ' + this.active.p1.name + '!\n';
+    this.active.p1.hp -= dealt_damage;
     if (this.active.p1.hp <= 0) {
-      this.switch('p1');
-      return;
+      message += this.active.p1.name + ' fainted!\n';
+      this.fainted = 'p1'
+      //this.switch('p1');
+      //return;
     }
-    this.active.p2.hp -= pokemon.moves(p1move).damage * (this.active.p1.atk / this.active.p2.def)
+
+    // faint check again
+    var dealt_damage = pokemon.Moves[p1move].damage * (this.active.p1.atk / this.active.p2.def);
+
+    console.log('p2');
+    console.log(this.active.p2.hp);
+    console.log(this.active.p2.maxhp);
+    console.log(dealt_damage);
+    if (this.active.p1.hp > 0) {
+      message += this.active.p1.name + ' has dealt ' + (dealt_damage*100/this.active.p2.maxhp).toString() + '% damage to ' + this.active.p2.name + '!\n';
+      this.active.p2.hp -= dealt_damage;
+    }
     if (this.active.p2.hp <= 0) {
-      this.switch('p2');
-      return;
+      message += this.active.p2.name + ' fainted!\n';
+      this.fainted = 'p1'
+      //this.switch('p2');
+      //return;
     }
   }
+  this.switch(this.fainted);
+  console.log(message);
 }
 
 

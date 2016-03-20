@@ -69,6 +69,8 @@ wsServer.on('request', function (request) {
         break;
       case 'create_battle':
         var new_battle = new battle.Battle(Global.users[cmd.uuid]);
+        Global.users[cmd.uuid].battle = new_battle.id;
+        Global.users[cmd.uuid].playerid = 'p1';
         console.log(Global.battles);
         break;
       case 'get_battles':
@@ -79,6 +81,12 @@ wsServer.on('request', function (request) {
         break;
       case 'join_battle':
         Global.users[cmd.uuid].join(cmd.battle_id);
+        Global.users[cmd.uuid].battle = cmd.battle_id;
+        Global.users[cmd.uuid].playerid = 'p2';
+        break;
+      case 'pick_move':
+        battle = Global.battles[Global.users[cmd.uuid].battle];
+        battle.get_move(Global.users[cmd.uuid].playerid, cmd.id);
         break;
       }
     }
