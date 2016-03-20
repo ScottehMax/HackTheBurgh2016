@@ -329,11 +329,26 @@
           if (message.info === 'battlemsg') {
             $('#battle_text').html(message.msg.replace('\n', '<br>'));
             if (me == 'p1') {
+
               $('#you_hp_bar').html(message.p1hp + '/' + message.p1maxhp);
+              $('#hp_bar_visual2').css("width",(parseFloat(message.p1hp) / message.p1maxhp)*227);
+              //console.log("width : "+('#hp_bar_visual2').css("width"));
+              //if(('#hp_bar_visual2').attr("width")==)
+              // $('#hp_bar_visual2').animate({
+              //   width:"-="+((1 -(parseFloat(message.p1hp) / message.p1maxhp)) * 227)+"px"
+
+              // },200,function(){});  
               $('#opponent_hp_bar').html(message.p2hp + '/' + message.p2maxhp);
+              $('#hp_bar_visual1').css("width",(parseFloat(message.p2hp) / message.p2maxhp)*227);
             } else {
               $('#opponent_hp_bar').html(message.p1hp + '/' + message.p1maxhp);
+              $('#hp_bar_visual2').css("width",(parseFloat(message.p2hp) / message.p2maxhp)*227);
+              // $('#hp_bar_visual1').animate({
+              //   width:"-="+((1 -(parseFloat(message.p2hp) / message.p2maxhp)) * 227)+"px"
+
+              // },200,function(){});  
               $('#you_hp_bar').html(message.p2hp + '/' + message.p2maxhp);
+              $('#hp_bar_visual1').css("width",(parseFloat(message.p1hp) / message.p1maxhp)*227);
             }
 
             //animations
@@ -512,9 +527,7 @@
         left: "+=20%",
         top: "-=27%"
       }, 200, function() {
-        $("#hp_bar_visual1").animate({
-          left:"="+(double($("#opponent_hp_bar").substring(0,3))/double($("#opponent_hp_bar").substring(3)))+"%"
-        }, 200, function(){});
+      
       });
     }
 
