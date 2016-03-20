@@ -76,10 +76,26 @@ Battle.prototype.switch = function (idn) {
     case 'p1':
       canswitch = this.alive('p1');
       console.log(canswitch);
+      Global.users[this.p1].socket.sendUTF(JSON.stringify({info: 'forceswitch',
+                                                           toswitch: canswitch}));
+      if (canswitch.length == 0) {
+        this.gameover = true;
+        var winner = 'p2';
+        Global.users[this.p1].socket.sendUTF(JSON.stringify({info: 'gameover',
+                                                             winner: winner}));
+      }
       break;
     case 'p2':
       canswitch = this.alive('p2');
       console.log(canswitch);
+      Global.users[this.p2].socket.sendUTF(JSON.stringify({info: 'forceswitch',
+                                                           toswitch: canswitch}));
+      if (canswitch.length == 0) {
+        this.gameover = true;
+        var winner = 'p1';
+        Global.users[this.p1].socket.sendUTF(JSON.stringify({info: 'gameover',
+                                                             winner: winner}));
+      }
       break;
   }
 }
