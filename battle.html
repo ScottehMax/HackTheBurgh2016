@@ -59,6 +59,10 @@
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
   <script>
     URL = "ws://localhost:9001/";
+    var Moves = {takedown: {name: "Take Down", damage: 80},
+                     hyperbeam: {name: "Hyper Beam", damage: 150},
+                     stomp: {name: "Stomp", damage: 100},
+                     doubleedge: {name: "Double-Edge", damage: 120},}
     var username;
     var uuid;
     var me;
@@ -110,6 +114,10 @@
       console.log(battle_id);
     }
 
+    function send_switch(pokemon_id) {
+      socket.send(JSON.stringify({"uuid": uuid, "type": "send_switch", "pokemon_id": pokemon_id}));
+    }
+
     function get_battles() {
       socket.send(JSON.stringify({"uuid": uuid, "type": "get_battles"}));
     }
@@ -158,6 +166,10 @@
           if (message.info === 'p1active') {
             if (me == 'p1') {
               $('#you').text(message.result.name);
+              $('button[name=move0]').text(Moves[message.result.moves[0]].name);
+              $('button[name=move1]').text(Moves[message.result.moves[1]].name);
+              $('button[name=move2]').text(Moves[message.result.moves[2]].name);
+              $('button[name=move3]').text(Moves[message.result.moves[3]].name);
             } else {
               $('#opponent').text(message.result.name);
             }
@@ -166,9 +178,33 @@
           if (message.info === 'p2active') {
             if (me == 'p2') {
               $('#you').text(message.result.name);
+              $('button[name=move0]').text(Moves[message.result.moves[0]].name);
+              $('button[name=move1]').text(Moves[message.result.moves[1]].name);
+              $('button[name=move2]').text(Moves[message.result.moves[2]].name);
+              $('button[name=move3]').text(Moves[message.result.moves[3]].name);
             } else {
               $('#opponent').text(message.result.name);
             }
+          }
+
+          if (message.info === 'team_info') {
+            my_team = message.team;
+          }
+
+          if (message.info === 'battlemsg') {
+            $('#battle_text').html(message.msg.replace('\n', '<br>'));
+          }
+
+          if (message.info === 'forceswitch') {
+            result = ''
+            console.log('forceswitch fired');
+            console.log(message.toswitch);
+            console.log(my_team);
+            for (var j in message.toswitch) {
+              i = message.toswitch[j];
+              result += '<br><button id=' + i + ' onclick="send_switch(this.id)">' + my_team[i].name + '</button>';
+            }
+            $('#battle_text').html($('#battle_text').html() + result);
           }
 
         } catch (e) {
@@ -223,12 +259,13 @@
       <div id="opponent_sprite" style="">Test</div>
       <div id="you" style="">Bloomberg</div>
       <div id="you_sprite" style="">Test</div>
+
       <div id="battle_text"> Bloomberg used Take Down! </div>
       <div id="battle_buttons">
-        <button id=0 onclick="send_move(this.id)">first move</button>
-        <button id=1 onclick="send_move(this.id)">second move</button>
-        <button id=2 onclick="send_move(this.id)">third move</button>
-        <button id=3 onclick="send_move(this.id)">fourth move</button>
+        <button id=0 name=move0 onclick="send_move(this.id)">first move</button>
+        <button id=1 name=move1 onclick="send_move(this.id)">second move</button>
+        <button id=2 name=move2 onclick="send_move(this.id)">third move</button>
+        <button id=3 name=move3 onclick="send_move(this.id)">fourth move</button>
       </div>
       You're not in a battle, you silly goose! Dunno how you managed to get here...
     </div>

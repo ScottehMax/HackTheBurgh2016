@@ -63,10 +63,12 @@ Battle.prototype.join = function (p2) {
   }
 }
 
-Battle.prototype.alive = function (idn) {
+Battle.prototype.alive = function (player_id) {
   result = [];
-  for (var i = 0; i < this.teams[idn].length; i++) {
-    if (this.teams[idn][i].hp > 0) {
+  console.log('teamalive')
+  console.log(this.teams[player_id])
+  for (var i = 0; i < this.teams[player_id].length; i++) {
+    if (this.teams[player_id][i].hp > 0) {
       result.push(i);
     }
   }
@@ -102,6 +104,13 @@ Battle.prototype.switch = function (idn) {
   }
 }
 
+Battle.prototype.finalise_switch = function (playerid, pokemonid) {
+  this.active[playerid] = this.teams[playerid][pokemonid];
+
+  Global.users[this.p1].socket.sendUTF(JSON.stringify({info: playerid + 'active', result: this.active[playerid]}));
+  Global.users[this.p2].socket.sendUTF(JSON.stringify({info: playerid + 'active', result: this.active[playerid]}));
+}
+
 Battle.prototype.get_move = function(playerid, moveid) {
   this.buffered_moves[playerid] = moveid;
   if (this.buffered_moves['p1'] !== null && this.buffered_moves['p2'] !== null) {
@@ -120,10 +129,7 @@ Battle.prototype.move = function (p1moveid, p2moveid) {
   var message = '';
   if (this.active.p1.spe >= this.active.p2.spe) {
     var dealt_damage = pokemon.Moves[p1move].damage * (this.active.p1.atk / this.active.p2.def);
-    console.log('p2');
-    console.log(this.active.p2.hp);
-    console.log(this.active.p2.maxhp);
-    console.log(dealt_damage);
+
     message += this.active.p1.name + ' has dealt ' + (dealt_damage*100/this.active.p2.maxhp).toString() + '% damage to ' + this.active.p2.name + '!\n';
     this.active.p2.hp -= dealt_damage;
     if (this.active.p2.hp <= 0) {
@@ -159,22 +165,23 @@ Battle.prototype.move = function (p1moveid, p2moveid) {
     // faint check again
     var dealt_damage = pokemon.Moves[p1move].damage * (this.active.p1.atk / this.active.p2.def);
 
-    console.log('p2');
-    console.log(this.active.p2.hp);
-    console.log(this.active.p2.maxhp);
-    console.log(dealt_damage);
     if (this.active.p1.hp > 0) {
       message += this.active.p1.name + ' has dealt ' + (dealt_damage*100/this.active.p2.maxhp).toString() + '% damage to ' + this.active.p2.name + '!\n';
       this.active.p2.hp -= dealt_damage;
     }
     if (this.active.p2.hp <= 0) {
       message += this.active.p2.name + ' fainted!\n';
-      this.fainted = 'p1'
+      this.fainted = 'p2'
       //this.switch('p2');
       //return;
     }
   }
+
+  Global.users[this.p1].socket.sendUTF(JSON.stringify({info: 'battlemsg', msg: message}));
+  Global.users[this.p2].socket.sendUTF(JSON.stringify({info: 'battlemsg', msg: message}));
+
   this.switch(this.fainted);
+
   console.log(message);
 }
 

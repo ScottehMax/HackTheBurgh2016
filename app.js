@@ -85,9 +85,12 @@ wsServer.on('request', function (request) {
         Global.users[cmd.uuid].playerid = 'p2';
         break;
       case 'pick_move':
-        battle = Global.battles[Global.users[cmd.uuid].battle];
-        battle.get_move(Global.users[cmd.uuid].playerid, cmd.id);
+        cur_battle = Global.battles[Global.users[cmd.uuid].battle];
+        cur_battle.get_move(Global.users[cmd.uuid].playerid, cmd.id);
         break;
+      case 'send_switch':
+        cur_battle = Global.battles[Global.users[cmd.uuid].battle];
+        cur_battle.finalise_switch(Global.users[cmd.uuid].playerid, cmd.pokemon_id);
       }
     }
   });
