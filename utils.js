@@ -1,8 +1,12 @@
 var Global = require('./global.js');
 
-exports.randint = function (a, b) {
+exports.randintold = function (a, b) {
   return Math.floor(Math.random() * b) + a;
 };
+
+exports.randint = function (min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 exports.uuid = function () {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {

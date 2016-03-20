@@ -61,6 +61,7 @@
     URL = "ws://localhost:9001/";
     var username;
     var uuid;
+    var me;
 
     // utility functions
     function set_name(name) {
@@ -100,6 +101,8 @@
 
     function join_battle(battle_id) {
       socket.send(JSON.stringify({"uuid": uuid, "type": "join_battle", "battle_id": battle_id}));
+      me = 'p2';
+      show_battle();
       console.log(battle_id);
     }
 
@@ -139,10 +142,29 @@
           }
           if (message.info === 'battle_create_success') {
             show_battle();
+            me = 'p1';
             // do transition to battle
           }
           if (message.info === 'animation') {
             // do animation shit
+          }
+
+
+          // you'll want to animate these if you have time (you fucking won't lol)
+          if (message.info === 'p1active') {
+            if (me == 'p1') {
+              $('#you').text(message.result.name);
+            } else {
+              $('#opponent').text(message.result.name);
+            }
+          }
+
+          if (message.info === 'p2active') {
+            if (me == 'p2') {
+              $('#you').text(message.result.name);
+            } else {
+              $('#opponent').text(message.result.name);
+            }
           }
 
         } catch (e) {
