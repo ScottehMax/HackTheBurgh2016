@@ -36,13 +36,13 @@ Battle.prototype.join = function (p2) {
     for (var i = 0; i < 3; i++) {
       random_stock = Object.keys(Global.stocks)[Math.floor(Math.random() * Object.keys(Global.stocks).length)]
       random_stock_data = Global.stocks[random_stock];
-      this.teams.p1.push(new pokemon.Pokemon(random_stock, random_stock_data[0], random_stock_data[1]));
+      this.teams.p1.push(new pokemon.Pokemon(random_stock, random_stock_data[0], random_stock_data[1], random_stock_data[2], random_stock_data[3]));
     }
 
     for (var i = 0; i < 3; i++) {
       random_stock = Object.keys(Global.stocks)[Math.floor(Math.random() * Object.keys(Global.stocks).length)]
       random_stock_data = Global.stocks[random_stock];
-      this.teams.p2.push(new pokemon.Pokemon(random_stock, random_stock_data[0], random_stock_data[1]));
+      this.teams.p2.push(new pokemon.Pokemon(random_stock, random_stock_data[0], random_stock_data[1], random_stock_data[2], random_stock_data[3]));
     }
 
     // here, send each user their teams
@@ -128,14 +128,23 @@ Battle.prototype.move = function (p1moveid, p2moveid) {
   p1move = this.active.p1.moves[p1moveid];
   p2move = this.active.p2.moves[p2moveid];
 
+  var animations = [];
+
   this.fainted = '';
+  var first;
 
   var message = '';
   if (this.active.p1.spe >= this.active.p2.spe) {
+    first = 'p1';
     var dealt_damage = Math.floor(pokemon.Moves[p1move].damage * (this.active.p1.atk / this.active.p2.def));
 
     message += this.active.p1.name + ' has dealt ' + (dealt_damage*100/this.active.p2.maxhp).toString().slice(0, 4) + '% damage to ' + this.active.p2.name + '!\n';
     this.active.p2.hp -= dealt_damage;
+    if (p1move == 'hyperbeam') {
+      animations.push('special');
+    } else {
+      animations.push('physical');
+    }
     if (this.active.p2.hp <= 0) {
       message += this.active.p2.name + ' fainted!\n';
       this.fainted = 'p2'
@@ -147,6 +156,11 @@ Battle.prototype.move = function (p1moveid, p2moveid) {
     if (this.active.p2.hp > 0) {
       message += this.active.p2.name + ' has dealt ' + (dealt_damage*100/this.active.p1.maxhp).toString().slice(0, 4) + '% damage to ' + this.active.p1.name + '!\n';
       this.active.p1.hp -= dealt_damage;
+      if (p2move == 'hyperbeam') {
+        animations.push('special');
+      } else {
+        animations.push('physical');
+      }
     }
 
     if (this.active.p1.hp <= 0) {
@@ -156,9 +170,15 @@ Battle.prototype.move = function (p1moveid, p2moveid) {
       //return;
     }
   } else {
+    first = 'p2';
     var dealt_damage = Math.floor(pokemon.Moves[p2move].damage * (this.active.p2.atk / this.active.p1.def));
     message += this.active.p2.name + ' has dealt ' + (dealt_damage*100/this.active.p1.maxhp).toString().slice(0, 4) + '% damage to ' + this.active.p1.name + '!\n';
     this.active.p1.hp -= dealt_damage;
+    if (p2move == 'hyperbeam') {
+      animations.push('special');
+    } else {
+      animations.push('physical');
+    }
     if (this.active.p1.hp <= 0) {
       message += this.active.p1.name + ' fainted!\n';
       this.fainted = 'p1'
@@ -172,6 +192,11 @@ Battle.prototype.move = function (p1moveid, p2moveid) {
     if (this.active.p1.hp > 0) {
       message += this.active.p1.name + ' has dealt ' + (dealt_damage*100/this.active.p2.maxhp).toString().slice(0, 4) + '% damage to ' + this.active.p2.name + '!\n';
       this.active.p2.hp -= dealt_damage;
+      if (p1move == 'hyperbeam') {
+        animations.push('special');
+      } else {
+        animations.push('physical');
+      }
     }
     if (this.active.p2.hp <= 0) {
       message += this.active.p2.name + ' fainted!\n';
@@ -181,8 +206,8 @@ Battle.prototype.move = function (p1moveid, p2moveid) {
     }
   }
 
-  Global.users[this.p1].socket.sendUTF(JSON.stringify({info: 'battlemsg', msg: message, p1hp: this.active.p1.hp, p2hp: this.active.p2.hp, p1maxhp: this.active.p1.maxhp, p2maxhp: this.active.p2.maxhp}));
-  Global.users[this.p1].socket.sendUTF(JSON.stringify({info: 'battlemsg', msg: message, p1hp: this.active.p1.hp, p2hp: this.active.p2.hp, p1maxhp: this.active.p1.maxhp, p2maxhp: this.active.p2.maxhp}));
+  Global.users[this.p1].socket.sendUTF(JSON.stringify({info: 'battlemsg', msg: message, p1hp: this.active.p1.hp, p2hp: this.active.p2.hp, p1maxhp: this.active.p1.maxhp, p2maxhp: this.active.p2.maxhp, anim: animations, first: first}));
+  Global.users[this.p2].socket.sendUTF(JSON.stringify({info: 'battlemsg', msg: message, p1hp: this.active.p1.hp, p2hp: this.active.p2.hp, p1maxhp: this.active.p1.maxhp, p2maxhp: this.active.p2.maxhp, anim: animations, first: first}));
 
   this.switch(this.fainted);
 
