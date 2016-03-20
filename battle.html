@@ -55,22 +55,22 @@
     background-image: url(images/apple_logo.png);
     width:100px;
     height:100px;
-    position:absolute; 
+    position:absolute;
     top:57%;
     left:30%;
 
-  } 
+  }
 
   #you_stats{
     font-family: 'PokemonGB' !important;
-    position:absolute; 
+    position:absolute;
     top:59%;
     left:57%;
   }
 
   #opponent_stats{
     font-family: 'PokemonGB' !important;
-    position:absolute; 
+    position:absolute;
     top:24%;
     left:30%;
   }
@@ -79,16 +79,16 @@
     background-image: url(images/google_logo.png);
     width:100px;
     height:100px;
-    position:absolute; 
+    position:absolute;
     top:23%;
     left:57%;
 
-  } 
+  }
 
   #you_ball{
     width:2.3%;
     height:4%;
-    position:absolute; 
+    position:absolute;
     top:61%;
     left:37%;
   }
@@ -98,11 +98,11 @@
   #opponent_ball{
     width:2.3%;
     height:4%;
-    position:absolute; 
+    position:absolute;
     top:37%;
     left:57%;
   }
-  
+
   #battle_buttons{
     padding-left: 4px;
     width:100%;
@@ -136,8 +136,13 @@
   </style>
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script type="text/javascript" src="https://raw.githubusercontent.com/43081j/pixelate.js/master/pixelate.min.js"></script>
   <script>
     URL = "ws://localhost:9001/";
+    var Moves = {takedown: {name: "Take Down", damage: 80},
+                     hyperbeam: {name: "Hyper Beam", damage: 150},
+                     stomp: {name: "Stomp", damage: 100},
+                     doubleedge: {name: "Double-Edge", damage: 120},}
     var username;
     var uuid;
     var me;
@@ -189,6 +194,10 @@
       console.log(battle_id);
     }
 
+    function send_switch(pokemon_id) {
+      socket.send(JSON.stringify({"uuid": uuid, "type": "send_switch", "pokemon_id": pokemon_id}));
+    }
+
     function get_battles() {
       socket.send(JSON.stringify({"uuid": uuid, "type": "get_battles"}));
     }
@@ -237,17 +246,56 @@
           if (message.info === 'p1active') {
             if (me == 'p1') {
               $('#you').text(message.result.name);
+              $('button[name=move0]').text(Moves[message.result.moves[0]].name);
+              $('button[name=move1]').text(Moves[message.result.moves[1]].name);
+              $('button[name=move2]').text(Moves[message.result.moves[2]].name);
+              $('button[name=move3]').text(Moves[message.result.moves[3]].name);
+              $('#you_hp_bar').html(message.result.hp + '/' + message.result.maxhp);
             } else {
               $('#opponent').text(message.result.name);
+              $('#opponent_hp_bar').html(message.result.hp + '/' + message.result.maxhp);
             }
           }
 
           if (message.info === 'p2active') {
             if (me == 'p2') {
               $('#you').text(message.result.name);
+              $('button[name=move0]').text(Moves[message.result.moves[0]].name);
+              $('button[name=move1]').text(Moves[message.result.moves[1]].name);
+              $('button[name=move2]').text(Moves[message.result.moves[2]].name);
+              $('button[name=move3]').text(Moves[message.result.moves[3]].name);
+              $('#you_hp_bar').html(message.result.hp + '/' + message.result.maxhp);
             } else {
               $('#opponent').text(message.result.name);
+              $('#opponent_hp_bar').html(message.result.hp + '/' + message.result.maxhp);
             }
+          }
+
+          if (message.info === 'team_info') {
+            my_team = message.team;
+          }
+
+          if (message.info === 'battlemsg') {
+            $('#battle_text').html(message.msg.replace('\n', '<br>'));
+            if (me == 'p1') {
+              $('#you_hp_bar').html(message.p1hp + '/' + message.p1maxhp);
+              $('#opponent_hp_bar').html(message.p2hp + '/' + message.p2maxhp);
+            } else {
+              $('#opponent_hp_bar').html(message.p1hp + '/' + message.p1maxhp);
+              $('#you_hp_bar').html(message.p2hp + '/' + message.p2maxhp);
+            }
+          }
+
+          if (message.info === 'forceswitch') {
+            result = ''
+            console.log('forceswitch fired');
+            console.log(message.toswitch);
+            console.log(my_team);
+            for (var j in message.toswitch) {
+              i = message.toswitch[j];
+              result += '<br><button id=' + i + ' onclick="send_switch(this.id)">' + my_team[i].name + '</button>';
+            }
+            $('#battle_text').html($('#battle_text').html() + result);
           }
 
         } catch (e) {
@@ -311,7 +359,7 @@
               // Animation complete.
               });
             });
-          }); 
+          });
         });
   }
 
@@ -349,11 +397,11 @@
                 // Animation complete.
               });
             });
-          }); 
+          });
         });
   }
 
-      
+
       function attack_move_you(){
         //console.log("In attack_move");
         $( "#you_sprite" ).animate({
@@ -385,7 +433,7 @@
         top: "-=27%"
       }, 200, function() {
         // Animation complete.
-      });  
+      });
     }
 
 
@@ -401,7 +449,7 @@
     </div>
   </div>
   <div id="mainscreen" style="display: none">
-    This is the main screen!
+    Welcome to Stockemon!
     <div id="buttons">
       <button id="create_battle" onClick="create_battle()">Create Battle</button>
       <button id="join_battle" onClick="get_battles()">Join Battle</button>
@@ -412,9 +460,10 @@
   </div>
 
   <div id="battlewindow" style="display: none">
+
     <div id="window">
       <div id="action_screen">
-        <div onClick="attack_move_opponent()"><img id="opponent_sprite" src="images/google_logo.png"></div>
+        <div onClick="attack_move_opponent()"><img id="opponent_sprite" src="images/google_logo.png" data-pixelate></div>
         <img id="opponent_ball" src="images/google_maps_logo.png" hidden>
 
         <div id="opponent_stats">
@@ -424,12 +473,12 @@
           <div id="opponent_hp_bar">150/150</div>
         </div>
 
-        <div onClick="attack_move_you()"><img id="you_sprite" src="images/apple_logo.png"></div>
+        <div onClick="attack_move_you()"><img id="you_sprite" src="images/apple_logo.png" data-pixelate></div>
         <img id="you_ball" src="images/iphone_logo.png" hidden>
-        
+
         <div id="you_stats">
           <div id="you">Bloomberg</div>
-          <div id="you_level">Lv. 42</div>
+          <div id="you_level">Lv. 50</div>
           <div class="hp_bar_visual"><img src="images/hp_bar.png"></div>
           <div id="you_hp_bar">150/150</div>
         </div>
@@ -440,10 +489,10 @@
 
       <div id="battle_text"> Bloomberg used Take Down! </div>
       <div id="battle_buttons">
-        <button id=0 class="action_buttons" onclick="send_move(this.id)">first move</button>
-        <button id=1 class="action_buttons" onclick="send_move(this.id)">second move</button>
-        <button id=2 class="action_buttons" onclick="send_move(this.id)">third move</button>
-        <button id=3 class="action_buttons" onclick="send_move(this.id) ">fourth move</button>
+        <button id=0 name=move0 class="action_buttons" onclick="send_move(this.id)">first move</button>
+        <button id=1 name=move1 class="action_buttons" onclick="send_move(this.id)">second move</button>
+        <button id=2 name=move2 class="action_buttons" onclick="send_move(this.id)">third move</button>
+        <button id=3 name=move3 class="action_buttons" onclick="send_move(this.id) ">fourth move</button>
       </div>
     </div>
   </div>
