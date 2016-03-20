@@ -190,6 +190,14 @@
       })
     }
 
+    function show_gameover() {
+      $('#battlewindow').fadeOut(300).delay(0.3).css('height', 0);
+      setTimeout(function(){
+        $('#gameoverscreen').css('top', 0).fadeIn(300).delay(0.3);
+        window.scrollTo(0, 1);
+      })
+    }
+
     function send_move(moveid) {
       socket.send(JSON.stringify({"uuid": uuid, "type": "pick_move", 'id': moveid}));
     }
@@ -332,6 +340,16 @@
               result += '<br><button id=' + i + ' onclick="send_switch(this.id)">' + my_team[i].name + '</button>';
             }
             $('#battle_text').html($('#battle_text').html() + result);
+          }
+
+          if (message.info === 'gameover') {
+            if (message.winner == me) {
+              $('#gameoverscreen').html("You win!");
+            } else {
+              $('#gameoverscreen').html("You lose...");
+            }
+
+            show_gameover();
           }
 
         } catch (e) {
@@ -499,6 +517,10 @@
     Waiting for someone to join...
   </div>
 
+  <div id="gameoverscreen" class="welcome_step1" style="display: None">
+    Placeholder.
+  </div>
+
   <div id="battlewindow" style="display: none">
 
     <div id="window">
@@ -536,6 +558,7 @@
       </div>
     </div>
   </div>
+
 </div>
 
 
